@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F35596F314E7CE13009B6217 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F35596F514E7CE13009B6217 /* Storyboard.storyboard */; };
+		F3358BBE14EDAFF100AAF290 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = F3358BBB14EDAFF100AAF290 /* Icon.png */; };
+		F3358BBF14EDAFF100AAF290 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F3358BBC14EDAFF100AAF290 /* Icon@2x.png */; };
+		F3358BC014EDAFF100AAF290 /* iTunes.png in Resources */ = {isa = PBXBuildFile; fileRef = F3358BBD14EDAFF100AAF290 /* iTunes.png */; };
 		F35E780A14E481D1000185F2 /* KitchenProductSingleInformationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F35E780914E481D1000185F2 /* KitchenProductSingleInformationViewController.m */; };
 		F36AF8EC14E5B0EC007D00A7 /* BasketProductListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F36AF8EB14E5B0EC007D00A7 /* BasketProductListViewController.m */; };
 		F36AF8F014E5BCED007D00A7 /* BasketCheckBoxUIControl.m in Sources */ = {isa = PBXBuildFile; fileRef = F36AF8EF14E5BCED007D00A7 /* BasketCheckBoxUIControl.m */; };
@@ -21,7 +23,6 @@
 		F3AEEB6514E2AF66005DBEC0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3AEEB6414E2AF66005DBEC0 /* Foundation.framework */; };
 		F3AEEB6714E2AF66005DBEC0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3AEEB6614E2AF66005DBEC0 /* CoreGraphics.framework */; };
 		F3AEEB6914E2AF66005DBEC0 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3AEEB6814E2AF66005DBEC0 /* CoreData.framework */; };
-		F3AEEB6F14E2AF66005DBEC0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F3AEEB6D14E2AF66005DBEC0 /* InfoPlist.strings */; };
 		F3AEEB7114E2AF66005DBEC0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F3AEEB7014E2AF66005DBEC0 /* main.m */; };
 		F3AEEB7514E2AF66005DBEC0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F3AEEB7414E2AF66005DBEC0 /* AppDelegate.m */; };
 		F3AEEB7814E2AF66005DBEC0 /* Kitchen.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F3AEEB7614E2AF66005DBEC0 /* Kitchen.xcdatamodeld */; };
@@ -39,15 +40,15 @@
 		F3AEEBA214E2B344005DBEC0 /* glyphicons_012_heart.png in Resources */ = {isa = PBXBuildFile; fileRef = F3AEEBA014E2B344005DBEC0 /* glyphicons_012_heart.png */; };
 		F3AEEBA314E2B344005DBEC0 /* glyphicons_012_heart@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F3AEEBA114E2B344005DBEC0 /* glyphicons_012_heart@2x.png */; };
 		F3AEEBA914E2B8A4005DBEC0 /* KitchenProductListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F3AEEBA814E2B8A4005DBEC0 /* KitchenProductListViewController.m */; };
+		F3AF7EB614EEA7BE00DBAA44 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F3AF7EB514EEA7BE00DBAA44 /* Storyboard.storyboard */; };
 		F3BB610E14E6A11B0055CB71 /* AttentionProductListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F3BB610D14E6A11B0055CB71 /* AttentionProductListViewController.m */; };
 		F3BB611514E6B9390055CB71 /* RecipeWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F3BB611414E6B9390055CB71 /* RecipeWebViewController.m */; };
-		F3EBADD214E7102000756854 /* iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = F3EBADD114E7102000756854 /* iPhone.png */; };
-		F3EBADD614E710F500756854 /* iPhone4.png in Resources */ = {isa = PBXBuildFile; fileRef = F3EBADD514E710F500756854 /* iPhone4.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		F35596F414E7CE13009B6217 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/Storyboard.storyboard; sourceTree = "<group>"; };
-		F35596F614E7CF6D009B6217 /* de */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = de; path = de.lproj/Storyboard.storyboard; sourceTree = "<group>"; };
+		F3358BBB14EDAFF100AAF290 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		F3358BBC14EDAFF100AAF290 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		F3358BBD14EDAFF100AAF290 /* iTunes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunes.png; sourceTree = "<group>"; };
 		F35E780814E481D1000185F2 /* KitchenProductSingleInformationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KitchenProductSingleInformationViewController.h; sourceTree = "<group>"; };
 		F35E780914E481D1000185F2 /* KitchenProductSingleInformationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KitchenProductSingleInformationViewController.m; sourceTree = "<group>"; };
 		F36AF8EA14E5B0EC007D00A7 /* BasketProductListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasketProductListViewController.h; sourceTree = "<group>"; };
@@ -68,7 +69,6 @@
 		F3AEEB6614E2AF66005DBEC0 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		F3AEEB6814E2AF66005DBEC0 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		F3AEEB6C14E2AF66005DBEC0 /* Kitchen-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Kitchen-Info.plist"; sourceTree = "<group>"; };
-		F3AEEB6E14E2AF66005DBEC0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F3AEEB7014E2AF66005DBEC0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F3AEEB7214E2AF66005DBEC0 /* Kitchen-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Kitchen-Prefix.pch"; sourceTree = "<group>"; };
 		F3AEEB7314E2AF66005DBEC0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -90,15 +90,13 @@
 		F3AEEB9D14E2B335005DBEC0 /* glyphicons_020_home@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "glyphicons_020_home@2x.png"; sourceTree = "<group>"; };
 		F3AEEBA014E2B344005DBEC0 /* glyphicons_012_heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = glyphicons_012_heart.png; sourceTree = "<group>"; };
 		F3AEEBA114E2B344005DBEC0 /* glyphicons_012_heart@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "glyphicons_012_heart@2x.png"; sourceTree = "<group>"; };
-		F3AEEBA414E2B5B4005DBEC0 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = /Users/tschwandt/Projekte/ObjC/Kitchen/Kitchen/de.lproj/InfoPlist.strings; sourceTree = "<absolute>"; };
 		F3AEEBA714E2B8A4005DBEC0 /* KitchenProductListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KitchenProductListViewController.h; sourceTree = "<group>"; };
 		F3AEEBA814E2B8A4005DBEC0 /* KitchenProductListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KitchenProductListViewController.m; sourceTree = "<group>"; };
+		F3AF7EB514EEA7BE00DBAA44 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		F3BB610C14E6A11B0055CB71 /* AttentionProductListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttentionProductListViewController.h; sourceTree = "<group>"; };
 		F3BB610D14E6A11B0055CB71 /* AttentionProductListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttentionProductListViewController.m; sourceTree = "<group>"; };
 		F3BB611314E6B9390055CB71 /* RecipeWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecipeWebViewController.h; sourceTree = "<group>"; };
 		F3BB611414E6B9390055CB71 /* RecipeWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecipeWebViewController.m; sourceTree = "<group>"; };
-		F3EBADD114E7102000756854 /* iPhone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iPhone.png; path = ../iPhone.png; sourceTree = "<group>"; };
-		F3EBADD514E710F500756854 /* iPhone4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iPhone4.png; path = ../iPhone4.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +156,9 @@
 		F3AEEB5314E2AF66005DBEC0 = {
 			isa = PBXGroup;
 			children = (
+				F3358BBB14EDAFF100AAF290 /* Icon.png */,
+				F3358BBC14EDAFF100AAF290 /* Icon@2x.png */,
+				F3358BBD14EDAFF100AAF290 /* iTunes.png */,
 				F3AEEB6A14E2AF66005DBEC0 /* Kitchen */,
 				F3AEEB6114E2AF66005DBEC0 /* Frameworks */,
 				F3AEEB5F14E2AF66005DBEC0 /* Products */,
@@ -189,7 +190,7 @@
 				F3AEEB8D14E2B1E8005DBEC0 /* Assets */,
 				F3AEEB7314E2AF66005DBEC0 /* AppDelegate.h */,
 				F3AEEB7414E2AF66005DBEC0 /* AppDelegate.m */,
-				F35596F514E7CE13009B6217 /* Storyboard.storyboard */,
+				F3AF7EB514EEA7BE00DBAA44 /* Storyboard.storyboard */,
 				F36AF8ED14E5BCC4007D00A7 /* Helper */,
 				F3AEEBA514E2B82E005DBEC0 /* Controller */,
 				F3AEEB8A14E2B15D005DBEC0 /* Model */,
@@ -202,7 +203,6 @@
 			isa = PBXGroup;
 			children = (
 				F3AEEB6C14E2AF66005DBEC0 /* Kitchen-Info.plist */,
-				F3AEEB6D14E2AF66005DBEC0 /* InfoPlist.strings */,
 				F3AEEB7014E2AF66005DBEC0 /* main.m */,
 				F3AEEB7214E2AF66005DBEC0 /* Kitchen-Prefix.pch */,
 			);
@@ -228,7 +228,6 @@
 		F3AEEB8D14E2B1E8005DBEC0 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				F3EBADCB14E70FE300756854 /* Icon */,
 				F36AF8F114E5BD69007D00A7 /* UI */,
 				F3AEEB8E14E2B1F1005DBEC0 /* Pictures */,
 			);
@@ -300,15 +299,6 @@
 			name = Recipes;
 			sourceTree = "<group>";
 		};
-		F3EBADCB14E70FE300756854 /* Icon */ = {
-			isa = PBXGroup;
-			children = (
-				F3EBADD514E710F500756854 /* iPhone4.png */,
-				F3EBADD114E7102000756854 /* iPhone.png */,
-			);
-			name = Icon;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -361,8 +351,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F3AEEB6F14E2AF66005DBEC0 /* InfoPlist.strings in Resources */,
-				F35596F314E7CE13009B6217 /* Storyboard.storyboard in Resources */,
 				F3AEEB9214E2B21C005DBEC0 /* shopping_cart@2x.png in Resources */,
 				F3AEEB9314E2B21C005DBEC0 /* shopping_cart.png in Resources */,
 				F3AEEB9614E2B22E005DBEC0 /* warning_sign@2x.png in Resources */,
@@ -377,8 +365,10 @@
 				F36AF91014E5D1AE007D00A7 /* glyphicons_150_uncheck@2x.png in Resources */,
 				F36AF91114E5D1AE007D00A7 /* glyphicons_150_uncheck.png in Resources */,
 				F36AF91214E5D1AE007D00A7 /* glyphicons_150_check.png in Resources */,
-				F3EBADD214E7102000756854 /* iPhone.png in Resources */,
-				F3EBADD614E710F500756854 /* iPhone4.png in Resources */,
+				F3358BBE14EDAFF100AAF290 /* Icon.png in Resources */,
+				F3358BBF14EDAFF100AAF290 /* Icon@2x.png in Resources */,
+				F3358BC014EDAFF100AAF290 /* iTunes.png in Resources */,
+				F3AF7EB614EEA7BE00DBAA44 /* Storyboard.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,27 +397,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		F35596F514E7CE13009B6217 /* Storyboard.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F35596F414E7CE13009B6217 /* en */,
-				F35596F614E7CF6D009B6217 /* de */,
-			);
-			name = Storyboard.storyboard;
-			sourceTree = "<group>";
-		};
-		F3AEEB6D14E2AF66005DBEC0 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F3AEEB6E14E2AF66005DBEC0 /* en */,
-				F3AEEBA414E2B5B4005DBEC0 /* de */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		F3AEEB7914E2AF66005DBEC0 /* Debug */ = {
@@ -507,7 +476,7 @@
 				F3AEEB7A14E2AF66005DBEC0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		F3AEEB7B14E2AF66005DBEC0 /* Build configuration list for PBXNativeTarget "Kitchen" */ = {
 			isa = XCConfigurationList;
@@ -516,7 +485,7 @@
 				F3AEEB7D14E2AF66005DBEC0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 
