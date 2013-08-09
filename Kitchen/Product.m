@@ -2,7 +2,7 @@
 //  Product.m
 //  Kitchen
 //
-//  Created by Tobias Schwandt on 08.02.12.
+//  Created by Tobias Schwandt on 04.03.12.
 //  Copyright (c) 2012 Zebresel. All rights reserved.
 //
 
@@ -11,10 +11,9 @@
 
 @implementation Product
 
-@dynamic product_name;
-@dynamic id;
-@dynamic product_date_fin;
 @dynamic date_add;
+@dynamic product_date_fin;
+@dynamic product_name;
 @dynamic product_picture;
 
 @end

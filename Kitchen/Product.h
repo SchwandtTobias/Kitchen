@@ -2,7 +2,7 @@
 //  Product.h
 //  Kitchen
 //
-//  Created by Tobias Schwandt on 08.02.12.
+//  Created by Tobias Schwandt on 04.03.12.
 //  Copyright (c) 2012 Zebresel. All rights reserved.
 //
 
@@ -12,10 +12,9 @@
 
 @interface Product : NSManagedObject
 
-@property (nonatomic, retain) NSString * product_name;
-@property (nonatomic, retain) NSNumber * id;
-@property (nonatomic, retain) NSDate * product_date_fin;
 @property (nonatomic, retain) NSDate * date_add;
-@property (nonatomic, retain) NSData * product_picture;
+@property (nonatomic, retain) NSDate * product_date_fin;
+@property (nonatomic, retain) NSString * product_name;
+@property (nonatomic, retain) NSString * product_picture;
 
 @end
