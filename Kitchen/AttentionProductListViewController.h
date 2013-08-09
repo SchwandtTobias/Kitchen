@@ -14,5 +14,4 @@
     NSManagedObjectContext *_managedObjectContext;
     NSMutableArray *_productsAttention;
 }
-
 @end

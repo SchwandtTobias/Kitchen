@@ -8,6 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PropertieWriter : NSObject
+@interface PropertieManager : NSObject
+
+- (BOOL)savePropertiesFromDrictionary:(NSDictionary *)_dict InFile:(NSString *)_filename;
+- (NSMutableDictionary *)loadPropertiesFromFile:(NSString *)_filename;
+
+- (void)setValue:(id)_value forKey:(NSString *)_key InFile:(NSString *)_filename;
+- (id)valueForKey:(NSString *)_key InFile:(NSString *)_filename;
 
 @end

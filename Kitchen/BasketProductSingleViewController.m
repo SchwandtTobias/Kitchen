@@ -17,19 +17,15 @@
 @synthesize productDim;
 
 
-- (void) alertBeforeDelete
+- (BOOL) saveProduct
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Löschen" message:@"Wollen Sie das Produkt wirklich löschen?" delegate:self cancelButtonTitle:@"Abbrechen" otherButtonTitles:@"Löschen", nil];
+    if ([productName.text length] == 0 || [productDim.text length] == 0 || [productAmount.text length] == 0) {
+        return NO;
+    }
     
-    [alert show];
-}
-
-
-- (void) saveProduct
-{
     _productInformation.product_name = productName.text;
     _productInformation.product_dimension = productDim.text;
-    _productInformation.product_amount = [NSNumber numberWithInt:[productAmount.text intValue]];
+    _productInformation.product_amount = [NSNumber numberWithFloat:[productAmount.text floatValue]];
     _productInformation.is_inside = [NSNumber numberWithInt:0];
     
     NSError *error;
@@ -37,15 +33,10 @@
     
     if (error) {
         NSLog(@"Error during save: %@", [error description]);
+        return NO;
     }
-    else
-    {
-        [productAmount resignFirstResponder];
-        [productDim resignFirstResponder];
-        [productName resignFirstResponder];
-        
-        [self.navigationController popViewControllerAnimated:YES];
-    }
+    
+    return YES;
 }
 
 - (void) deleteProductInData
@@ -68,14 +59,15 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 1) {
+        //[TestFlight passCheckpoint:@"BASKET DETAIL: delete product"];
         [self deleteProductInData];
     }
 }
 
-
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
+    [self saveProduct];
     return YES;
 }
 
@@ -140,10 +132,8 @@
 }
 
 - (IBAction)deleteProductInBasket:(id)sender {
-    [self alertBeforeDelete];
-}
-
-- (IBAction)editingDone:(id)sender {
-    [self saveProduct];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Entfernen" message:@"Wollen Sie das Produkt wirklich von der Liste streichen?" delegate:self cancelButtonTitle:@"Abbrechen" otherButtonTitles:@"Ja", nil];
+    
+    [alert show];
 }
 @end

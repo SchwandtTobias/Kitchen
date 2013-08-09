@@ -13,24 +13,30 @@
 
 #import "BasketProductSingleViewController.h"
 #import "BasketCheckBoxUIControl.h"
+#import "PropertieManager.h"
 
 
 @implementation BasketProductListViewController
-@synthesize managedObjectContext = _managedObjectContext;
-@synthesize productsInBasket = _productsInBasket;
-
 @synthesize insertTextField = _insertTextField;
-@synthesize editingDoneBarButton = _editingDoneBarButton;
 
 
-- (void) alertForAction
-{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Aktion" message:@"Was soll mit den ausgewählten Produkten passieren?" delegate:self cancelButtonTitle:@"Abbrechen" otherButtonTitles:@"Löschen", @"In Küche ablegen", @"Küche und Löschen", nil];
+
+- (void) refreshBadge
+{   
+    NSString *badgeValue = [NSString stringWithFormat:@"%i", [_productsInBasket count]];
     
-    [alert show];
+    PropertieManager *pManager = [[PropertieManager alloc] init];
+    [pManager setValue:badgeValue forKey:@"badgeBasket" InFile:@"app_informations"];
+    
+    //Set
+    if ([_productsInBasket count] == 0) {
+        badgeValue = nil;
+    }
+    [[[[[self tabBarController] viewControllers] objectAtIndex:3] tabBarItem] setBadgeValue:badgeValue];
 }
 
-- (void)getData
+
+- (BOOL)getData
 {
     AppDelegate *app = [[UIApplication sharedApplication] delegate];
     _managedObjectContext = app.managedObjectContext;
@@ -40,7 +46,7 @@
     [fetchRequest setFetchBatchSize:32];
     [fetchRequest setEntity:entity];
     
-    NSSortDescriptor *sort1 = [NSSortDescriptor sortDescriptorWithKey:@"is_inside" ascending:YES];
+    NSSortDescriptor *sort1 = [NSSortDescriptor sortDescriptorWithKey:@"date_add" ascending:NO];
     NSSortDescriptor *sort2 = [NSSortDescriptor sortDescriptorWithKey:@"product_name" ascending:YES];
     NSArray *sortArray = [NSArray arrayWithObjects:sort1, sort2, nil];
     
@@ -52,10 +58,12 @@
     if(error)
     {
         NSLog(@"Error in DB Request: %@", [error description]);
+        return NO;
     }
+    return YES;
 }
 
-- (void)deleteProduct:(BasketProduct *)product
+- (BOOL)deleteProduct:(BasketProduct *)product
 {
     
     [_managedObjectContext deleteObject:product];
@@ -67,16 +75,19 @@
     if(error)
     {
         NSLog(@"Error during delete object %@", [error description]);
+        return NO;
     }
-    else
-    {
-        [self getData];
-        [self.tableView reloadData];
-    }
+
+    [self getData];
+    [self.tableView reloadData];
+    
+    [self refreshBadge];
+    
+    return YES;
 }
 
 
-- (void)addIntoKitchenProduct:(BasketProduct *)product
+- (BOOL)addIntoKitchenProduct:(BasketProduct *)product
 {
     Product *newProduct = [NSEntityDescription insertNewObjectForEntityForName:@"Product" inManagedObjectContext:_managedObjectContext];
     newProduct.product_name = product.product_name;
@@ -87,7 +98,9 @@
     if(error)
     {
         NSLog(@"Error during add product to kitchen: %@", [error description]);
+        return NO;
     }
+    return YES;
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -162,7 +175,7 @@
     //Add product to list
     BasketProduct *newProduct = [NSEntityDescription insertNewObjectForEntityForName:@"BasketProduct" inManagedObjectContext:_managedObjectContext];
     newProduct.product_name = product_name;
-    newProduct.product_amount = [NSNumber numberWithInt:1];
+    newProduct.product_amount = [NSNumber numberWithFloat:1.0f];
     newProduct.product_dimension = @"Stk.";
     newProduct.is_inside = [NSNumber numberWithInt:0];
     newProduct.date_add = [NSDate date];
@@ -178,6 +191,7 @@
     {
         [self getData];
         [self.tableView reloadData];
+        [self refreshBadge];
     }
 }
 
@@ -185,16 +199,15 @@
 - (void)editingDone {
     self.navigationItem.rightBarButtonItem = nil;
     
-    [_insertTextField resignFirstResponder];
-    [self insertDataWithProduct:_insertTextField.text];
+    if ([[_insertTextField text] length] == 0) {
+        [_insertTextField resignFirstResponder];
+    }
+    else {
+        [_insertTextField becomeFirstResponder];
+    }
+    
+    [self insertDataWithProduct: [_insertTextField text]];
     _insertTextField.text = @"";
-}
-
-
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
-{
-    self.navigationItem.rightBarButtonItem = _editingDoneBarButton;
-    return YES;
 }
 
 
@@ -235,23 +248,11 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
-    _insertTextField = [[UITextField alloc] initWithFrame:CGRectMake(10, 14, 185, 30)];
-    _insertTextField.delegate = self; 
-    
-    _insertTextField.placeholder = @"Produkt hinzufügen.";
-    
-    [_insertTextField setReturnKeyType:UIReturnKeyDone];
-    
-    [_insertTextField setFont:[UIFont boldSystemFontOfSize:[UIFont systemFontSize]]];
-    
-    //Create BarButton Item
-    _editingDoneBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(editingDone)];
-    [_editingDoneBarButton setStyle:UIBarButtonItemStyleDone];
 }
 
 - (void)viewDidUnload
 {
+    [self setInsertTextField:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -263,6 +264,8 @@
     
     [self getData];
     [self.tableView reloadData];
+    
+    [self refreshBadge];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -295,13 +298,13 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [_productsInBasket count] + 1;
+    return [_productsInBasket count];
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"BasketProductCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
@@ -309,47 +312,39 @@
     }
     
     // Configure the cell...
-    if(indexPath.row == 0)
+    BasketProduct *productInCell = [_productsInBasket objectAtIndex:indexPath.row];
+    
+    UILabel *productName    = (UILabel *)[cell viewWithTag:100];
+    UILabel *productAmount  = (UILabel *)[cell viewWithTag:101];
+    UIView *productCheck    = (UIView *)[cell viewWithTag:200];
+    
+    [productName setText:productInCell.product_name];
+    [productAmount setText:[NSString stringWithFormat:@"%@ %@", productInCell.product_amount, productInCell.product_dimension]];
+    
+    //Checkbox
+    BasketCheckBoxUIControl *checkBox;
+    if([[productCheck subviews] count] > 0)
     {
-        //Add TextField
-        [[cell contentView] addSubview:_insertTextField];
-        
-        //Set Style for this row
-        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-        
-        cell.textLabel.text = @"";
+        checkBox = [[productCheck subviews] lastObject];
     }
     else
     {
-        BasketProduct *productInCell = [_productsInBasket objectAtIndex:indexPath.row - 1];
-        cell.detailTextLabel.text = productInCell.product_name;
-        cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", productInCell.product_amount, productInCell.product_dimension];
-        
-        
-        //Add Checkbox to cell
-        BasketCheckBoxUIControl *checkBox;
-        if([[[cell contentView] subviews] count] > 2)
-        {
-            checkBox = [[[cell contentView] subviews] lastObject];
-        }
-        else
-        {
-            checkBox = [[BasketCheckBoxUIControl alloc] initWithFrame:CGRectMake(20, 10, 25, 21)];
-            [[cell contentView]addSubview: checkBox];
-        }
-        
-        if (productInCell.is_inside == [NSNumber numberWithInt:1]) {
-            [checkBox setCheckBoxTo:YES];
-        }
-        else
-        {
-            [checkBox setCheckBoxTo:NO];
-        }
-            
-        [checkBox setRowNumber: indexPath.row - 1];
-        [checkBox addTarget:self action:@selector(checkProductOnPosition:) forControlEvents:UIControlEventTouchUpInside];
+        checkBox = [[BasketCheckBoxUIControl alloc] initWithFrame:CGRectMake(20, 10, 25, 21)];
+        [productCheck addSubview: checkBox];
     }
-
+    
+    if (productInCell.is_inside == [NSNumber numberWithInt:1]) 
+    {
+        [checkBox setCheckBoxTo:YES];
+    }
+    else
+    {
+        [checkBox setCheckBoxTo:NO];
+    }
+        
+    [checkBox setRowNumber: indexPath.row];
+    [checkBox addTarget:self action:@selector(checkProductOnPosition:) forControlEvents:UIControlEventTouchUpInside];
+    
     
     return cell;
 }
@@ -397,6 +392,18 @@
 
 #pragma mark - Table view delegate
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    [_insertTextField resignFirstResponder];
+    
+    if ([[segue identifier] isEqualToString:@"BasketProductInformationSegue"])
+    {
+        BasketProductSingleViewController *detail = [segue destinationViewController];
+        NSIndexPath *index = [[[segue sourceViewController] tableView] indexPathForCell:sender];
+        [detail setProductInformation:[_productsInBasket objectAtIndex:index.row]];
+    }
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Navigation logic may go here. Create and push another view controller.
@@ -406,14 +413,11 @@
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
-    
-    BasketProductSingleViewController *detail = [[self storyboard] instantiateViewControllerWithIdentifier:@"BasketProductSingleView"];
-    detail.productInformation = [_productsInBasket objectAtIndex:indexPath.row - 1];
-    
-    [self.navigationController pushViewController:detail animated:YES];
 }
 
 - (IBAction)actionBarButton:(id)sender {
-    [self alertForAction];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Aktion" message:@"Was soll mit den ausgewählten Produkten passieren?" delegate:self cancelButtonTitle:@"Abbrechen" otherButtonTitles:@"Entfernen", @"In Küche ablegen", @"Küche und Entfernen", nil];
+    
+    [alert show];
 }
 @end

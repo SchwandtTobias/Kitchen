@@ -10,14 +10,42 @@
 #import "KitchenProductSingleInformationViewController.h"
 #import "AppDelegate.h"
 
+#import "PropertieManager.h"
 #import "Product.h"
 
 @implementation KitchenProductListViewController
-@synthesize managedObjectContext = _managedObjectContext;
-@synthesize productsInKitchen = _productsInKitchen;
-
 @synthesize insertTextField = _insertTextField;
-@synthesize editingDoneBarButton = _editingDoneBarButton;
+
+
+- (void)setBadgesOnStart
+{
+    PropertieManager *pManager = [[PropertieManager alloc] init];
+    
+    NSString *badgeAttention = [pManager valueForKey:@"badgeAttention" InFile:@"app_informations"];
+    if (![badgeAttention isEqualToString:@"0"]) {
+        [[[[[self tabBarController] viewControllers] objectAtIndex:1] tabBarItem] setBadgeValue:badgeAttention];
+    }
+    
+    NSString *badgeBasket = [pManager valueForKey:@"badgeBasket" InFile:@"app_informations"];
+    if (![badgeBasket isEqualToString:@"0"]) {
+        [[[[[self tabBarController] viewControllers] objectAtIndex:3] tabBarItem] setBadgeValue:badgeBasket];
+    }
+}
+
+
+- (void) refreshBadge
+{   
+    NSString *badgeValue = [NSString stringWithFormat:@"%i", _badgeAttentionCounter];
+    
+    PropertieManager *pManager = [[PropertieManager alloc] init];
+    [pManager setValue:badgeValue forKey:@"badgeAttention" InFile:@"app_informations"];
+    
+    //Set
+    if (_badgeAttentionCounter == 0) {
+        badgeValue = nil;
+    }
+    [[[[[self tabBarController] viewControllers] objectAtIndex:1] tabBarItem] setBadgeValue:badgeValue];
+}
 
 
 - (void)getData
@@ -38,6 +66,14 @@
     
     NSError *error;
     _productsInKitchen = [[_managedObjectContext executeFetchRequest:fetchRequest error:&error] mutableCopy];
+    
+    _badgeAttentionCounter = 0;
+    for (Product *product in _productsInKitchen) {
+        if (!([product.product_date_fin timeIntervalSinceNow] > 0 || [product.product_date_fin timeIntervalSince1970] == 0))
+        {
+            ++_badgeAttentionCounter;
+        }
+    }
     
     if(error)
     {
@@ -61,6 +97,8 @@
     {
         NSLog(@"Error in DB Insert: %@", [error description]);
     }
+
+    //[TestFlight passCheckpoint:@"KITCHEN TABLE: add product"];
     
     [self getData];
     [self.tableView reloadData];
@@ -70,16 +108,15 @@
 - (void)editingDone {
     self.navigationItem.rightBarButtonItem = nil;
     
-    [_insertTextField resignFirstResponder];
+    if ([[_insertTextField text] length] == 0) {
+        [_insertTextField resignFirstResponder];
+    }
+    else
+    {
+        [_insertTextField becomeFirstResponder];
+    }
     [self insertDataWithProduct:_insertTextField.text];
     _insertTextField.text = @"";
-}
-
-
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
-{
-    self.navigationItem.rightBarButtonItem = _editingDoneBarButton;
-    return YES;
 }
 
 
@@ -119,31 +156,17 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     //self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    
-    
-    //Create TextField
-    _insertTextField = [[UITextField alloc] initWithFrame:CGRectMake(10, 14, 185, 30)];
-    _insertTextField.delegate = self; 
-    
-    _insertTextField.placeholder = @"Produkt hinzufügen.";
-    
-    [_insertTextField setReturnKeyType:UIReturnKeyDone];
-    
-    [_insertTextField setFont:[UIFont boldSystemFontOfSize:[UIFont systemFontSize]]];
-    
-    //Create BarButton Item
-    _editingDoneBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(editingDone)];
-    [_editingDoneBarButton setStyle:UIBarButtonItemStyleDone];
+    //Set badges
+    [self setBadgesOnStart];
 }
 
 - (void)viewDidUnload
 {
+    [self setInsertTextField:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
-    
-    _insertTextField = nil;
-    _editingDoneBarButton = nil;
+
     _managedObjectContext = nil;
 }
 
@@ -153,6 +176,9 @@
     
     [self getData];
     [self.tableView reloadData];
+    
+    //Badge reloadi
+    [self refreshBadge];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -185,111 +211,79 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [_productsInKitchen count] + 1;
+    return [_productsInKitchen count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-    
+    static NSString *CellIdentifier = @"KitchenProductsCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
-    
     // Configure the cell...
-    if(indexPath.row == 0)
+    Product *productInCell = [_productsInKitchen objectAtIndex:indexPath.row];
+    cell.textLabel.text = productInCell.product_name;
+    
+    NSString *detailText = @"Kein Ablaufdatum angegeben.";
+    
+    NSDate *date = productInCell.product_date_fin;
+    if ([date timeIntervalSince1970] != 0)
     {
-        //Add TextField
-        [[cell contentView] addSubview:_insertTextField];
+        int t1 = [date timeIntervalSinceNow];
+        int daysBetween = (int)((double)t1/(3600.0*24.00));
         
-        //Set Style for this row
-        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-        
-        cell.textLabel.text = @"";
-    }
-    else
-    {
-        Product *productInCell = [_productsInKitchen objectAtIndex:indexPath.row - 1];
-        cell.textLabel.text = productInCell.product_name;
-        
-        NSString *detailText = @"Kein Ablaufdatum angegeben.";
-        
-        NSDate *date = productInCell.product_date_fin;
-        if ([date timeIntervalSince1970] != 0)
+        if(daysBetween < 2)
         {
-            int t1 = [date timeIntervalSinceNow];
-            int daysBetween = (int)((double)t1/(3600.0*24.00));
-            
-            if(daysBetween > 0)
+            if(daysBetween >= -2)
             {
-                if(daysBetween == -1)
-                {
-                    detailText = @"Bis morgen haltbar.";
-                }
-                else
-                {
-                    detailText = [NSString stringWithFormat:@"Noch %i Tage haltbar.", daysBetween];
-                }
-            }   
-            else if (daysBetween < 0)
-            {
-                if(daysBetween == -1)
-                {
-                    detailText = @"Gestern abgelaufen.";
-                }
-                else
-                {
-                    detailText = [NSString stringWithFormat:@"Seit %i Tagen abgelaufen.", -daysBetween];
-                }
+                detailText = @"Läuft demnächst ab.";
             }
             else
             {
-                detailText = @"Heute abgelaufen.";
+                detailText = [NSString stringWithFormat:@"Seit etwa %i Tagen abgelaufen.", -daysBetween]; 
             }
+        }   
+        else
+        {
+            detailText = [NSString stringWithFormat:@"Noch etwa %i Tage haltbar.", daysBetween];
         }
-
-        
-        
-        
-        [cell.detailTextLabel setFont:[UIFont systemFontOfSize:10]];
-        cell.detailTextLabel.text = detailText;
     }
+    
+    [cell.detailTextLabel setFont:[UIFont systemFontOfSize:10]];
+    cell.detailTextLabel.text = detailText;
     
     return cell;
 }
 
+
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.row > 0)
+    Product *productInCell = [_productsInKitchen objectAtIndex:indexPath.row];
+    NSDate *date = productInCell.product_date_fin;
+    
+    UIColor *color = [UIColor grayColor];
+    if ([date timeIntervalSince1970] != 0)
     {
-        Product *productInCell = [_productsInKitchen objectAtIndex:indexPath.row - 1];
-        NSDate *date = productInCell.product_date_fin;
+        color = [UIColor redColor];
         
-        UIColor *color = [UIColor grayColor];
-        if ([date timeIntervalSince1970] != 0)
+        int t1 = [date timeIntervalSinceNow];
+        int daysBetween = (int)((double)t1/(3600.0*24.00));
+        
+        if(daysBetween > -2)
         {
-            color = [UIColor redColor];
-            
-            int t1 = [date timeIntervalSinceNow];
-            int daysBetween = (int)((double)t1/(3600.0*24.00));
-            
-            if(daysBetween > -2)
+            if(daysBetween < 3)
             {
-                if(daysBetween < 3)
-                {
-                    color = [UIColor orangeColor];
-                }
-                else
-                {
-                    color = [UIColor colorWithRed:(40./255.0) green:(150./255.0) blue:(0./255.0) alpha:1.0];
-                }
-            }   
-        }
-        [cell.detailTextLabel setTextColor:color];
+                color = [UIColor orangeColor];
+            }
+            else
+            {
+                color = [UIColor colorWithRed:(40./255.0) green:(150./255.0) blue:(0./255.0) alpha:1.0];
+            }
+        }   
     }
-
+    [cell.detailTextLabel setTextColor:color];
 }
 
 /*
@@ -333,6 +327,19 @@
 
 #pragma mark - Table view delegate
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([[segue identifier] isEqualToString:@"KitchenProductToSingleSegue"]) {
+        [_insertTextField resignFirstResponder];
+        [_insertTextField setText:@""];
+        
+        KitchenProductSingleInformationViewController *detail = [segue destinationViewController];
+        NSIndexPath *index = [[[segue sourceViewController] tableView] indexPathForCell:sender];
+        Product *product = [_productsInKitchen objectAtIndex:index.row];
+        detail.productInformation = product;
+    }
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Navigation logic may go here. Create and push another view controller.
@@ -342,16 +349,5 @@
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
-    [_insertTextField resignFirstResponder];
-    [_insertTextField setText:@""];
-    
-    [self.navigationItem setRightBarButtonItem:nil];
-    
-    KitchenProductSingleInformationViewController *detail = [self.storyboard instantiateViewControllerWithIdentifier:@"KitchenProductSingleInformation"];
-    
-    Product *product = [_productsInKitchen objectAtIndex:indexPath.row - 1];
-    detail.productInformation = product;
-    
-    [self.navigationController pushViewController:detail animated:YES];
 }
 @end

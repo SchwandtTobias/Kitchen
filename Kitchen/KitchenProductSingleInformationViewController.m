@@ -13,41 +13,41 @@
 @implementation KitchenProductSingleInformationViewController
 
 @synthesize productInformation = _productInformation;
-@synthesize managedObjectContext = _managedObjectContext;
 
 @synthesize datePickerKeyboard = _datePickerKeyboard;
 @synthesize productName = _productName;
 @synthesize productFinDate = _productFinDate;
 
 
-- (void) alertBeforeDelete
+- (BOOL) saveProduct
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Löschen" message:@"Wollen Sie das Produkt wirklich löschen?" delegate:self cancelButtonTitle:@"Abbrechen" otherButtonTitles:@"Löschen", @"Einkaufskorb und Löschen", nil];
-    
-    [alert show];
-}
-
-
-- (void) saveProduct
-{
-    if([_productName.text length] == 0) return;
+    if ([_productName.text length] == 0) {
+        return NO;
+    }    
     
     _productInformation.product_name = _productName.text;
-    _productInformation.product_date_fin = [_datePickerKeyboard date];
+    if([_productFinDate.text length] == 0)
+    {
+        _productInformation.product_date_fin = nil;
+    }
+    else
+    {
+        _productInformation.product_date_fin = [_datePickerKeyboard date]; 
+        //[TestFlight passCheckpoint:@"KITCHEN DETAIL: add date"];
+    }
     
     NSError *error;
     [_managedObjectContext save:&error];
     
     if (error) {
         NSLog(@"Error during save: %@", [error description]);
+        return NO;
     }
-    else
-    {
-        [self.navigationController popViewControllerAnimated:YES];
-    }
+    
+    return YES;
 }
 
-- (void) deleteProductInData
+- (BOOL) deleteProductInData
 {
     [_managedObjectContext deleteObject:_productInformation];
     
@@ -57,28 +57,54 @@
     if(error)
     {
         NSLog(@"Error during delete: %@", [error description]);
+        return NO;
     }
-    else
-    {
-        [self.navigationController popViewControllerAnimated:YES];
-    }
+    
+    [self.navigationController popViewControllerAnimated:YES];
+    return YES;
 }
 
-- (void) addProductToBasket
+- (BOOL) addProductToBasket
 {
     BasketProduct *basketProduct = [NSEntityDescription insertNewObjectForEntityForName:@"BasketProduct" inManagedObjectContext:_managedObjectContext];
     basketProduct.product_name = _productInformation.product_name;
-    basketProduct.product_amount = [NSNumber numberWithInt:1];
+    basketProduct.product_amount = [NSNumber numberWithFloat:1.0f];
     basketProduct.product_dimension = @"Stk.";
     basketProduct.is_inside = [NSNumber numberWithInt:0];
     
     NSError *error;
     [_managedObjectContext save:&error];
     
+    //[TestFlight passCheckpoint:@"KITCHEN DETAIL: add product to basket"];
+    
     if(error)
     {
         NSLog(@"Error during insert in basket: %@", [error description]);
+        return NO;
     }
+
+    //Increase Badge
+    int tmpBadgeValue = [[[[[[self tabBarController] viewControllers] objectAtIndex:3] tabBarItem] badgeValue] intValue];
+    ++tmpBadgeValue;
+    [[[[[self tabBarController] viewControllers] objectAtIndex:3] tabBarItem] setBadgeValue:[NSString stringWithFormat:@"%i", tmpBadgeValue]];
+    
+    return YES;
+}
+
+
+- (void) dateSelected
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"EEEE, dd. MMM yyyy"];
+    _productFinDate.text = [formatter stringFromDate:[_datePickerKeyboard date]];
+    
+    [self saveProduct];
+}
+
+- (void) closeDatepicker
+{
+    [_productFinDate resignFirstResponder];
+    [self saveProduct];
 }
 
 - (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -92,19 +118,32 @@
     }
 }
 
-
+#pragma mark - textfield delegates
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+    [self saveProduct];
     [textField resignFirstResponder];
     return YES;
 }
 
 
-- (void) dateSelected
+-(void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"EEEE, dd. MMM yyyy"];
-    _productFinDate.text = [formatter stringFromDate:[_datePickerKeyboard date]];
+    if([textField tag] == 1)
+    {
+        _swapBarButtonItem = [self.navigationItem rightBarButtonItem];
+        
+        UIBarButtonItem *doneBt = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(closeDatepicker)];
+        [self.navigationItem setRightBarButtonItem:doneBt];
+    }
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if ([textField tag] == 1) {
+        [self.navigationItem setRightBarButtonItem:_swapBarButtonItem];
+        _swapBarButtonItem = nil;
+    }
 }
 
 
@@ -153,6 +192,7 @@
     
     _productFinDate.inputView = _datePickerKeyboard;
     
+    
     //Set Object Context
     AppDelegate *app = [[UIApplication sharedApplication] delegate];
     _managedObjectContext = app.managedObjectContext;
@@ -183,15 +223,12 @@
 }
 
 - (IBAction)deleteProduct:(id)sender {
-    [self alertBeforeDelete];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Mülleimer" message:@"Wollen Sie das Produkt wirklich in den Müll werfen?" delegate:self cancelButtonTitle:@"Abbrechen" otherButtonTitles:@"Ja", @"Ja und auf die Einkaufsliste", nil];
+    
+    [alert show];
 }
 
 - (IBAction)intoBasket:(id)sender {
     [self addProductToBasket];
-}
-
-- (IBAction)doneEditing:(id)sender {
-    [_productFinDate resignFirstResponder];
-    [self saveProduct];
 }
 @end

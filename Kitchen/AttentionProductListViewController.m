@@ -10,9 +10,25 @@
 #import "AppDelegate.h"
 #import "KitchenProductSingleInformationViewController.h"
 
+#import "PropertieManager.h"
+
 
 @implementation AttentionProductListViewController
 
+
+- (void) refreshBadge
+{   
+    NSString *badgeValue = [NSString stringWithFormat:@"%i", [_productsAttention count]];
+    
+    PropertieManager *pManager = [[PropertieManager alloc] init];
+    [pManager setValue:badgeValue forKey:@"badgeAttention" InFile:@"app_informations"];
+    
+    //Set
+    if ([_productsAttention count] == 0) {
+        badgeValue = nil;
+    }
+    [[[[[self tabBarController] viewControllers] objectAtIndex:1] tabBarItem] setBadgeValue:badgeValue];
+}
 
 
 - (void)getData
@@ -91,6 +107,8 @@
     
     [self getData];
     [self.tableView reloadData];
+    
+    [self refreshBadge];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -128,7 +146,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"AttentionCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
@@ -208,6 +226,16 @@
 
 #pragma mark - Table view delegate
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([[segue identifier] isEqualToString:@"AttentionToSingleSegue"]) {
+        KitchenProductSingleInformationViewController *detail = [segue destinationViewController];
+        NSIndexPath *index = [[[segue sourceViewController] tableView] indexPathForCell:sender];
+        Product *product = [_productsAttention objectAtIndex:index.row];
+        detail.productInformation = product;
+    }
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Navigation logic may go here. Create and push another view controller.
@@ -217,15 +245,5 @@
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
-    
-    [self.navigationItem setRightBarButtonItem:nil];
-    
-    KitchenProductSingleInformationViewController *detail = [self.storyboard instantiateViewControllerWithIdentifier:@"KitchenProductSingleInformation"];
-    
-    Product *product = [_productsAttention objectAtIndex:indexPath.row];
-    detail.productInformation = product;
-    
-    [self.navigationController pushViewController:detail animated:YES];
 }
-
 @end

@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 
 @interface KitchenProductListViewController : UITableViewController<UITextFieldDelegate>
-
-@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (strong, nonatomic) NSMutableArray *productsInKitchen;
-
-@property (strong, nonatomic) UITextField *insertTextField;
-@property (strong, nonatomic) UIBarButtonItem *editingDoneBarButton;
+{
+    NSManagedObjectContext *_managedObjectContext;
+    NSMutableArray *_productsInKitchen;
+    
+    int _badgeAttentionCounter;
+}
+@property (weak, nonatomic) IBOutlet UITextField *insertTextField;
 @end

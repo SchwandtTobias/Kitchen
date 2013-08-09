@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 
+
 @implementation AppDelegate
 
 @synthesize window = _window;
@@ -15,10 +16,20 @@
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
 
+
+//hide warnings
+#pragma GCC diagnostic ignored "-Wall"
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    //Init testflight
+    //[TestFlight takeOff:@"2d09b4d02e8e462956ef65cc800027bf_NjIwOTIyMDEyLTAyLTEzIDA5OjUxOjE4LjMyNjM5NQ"];
+    
+    //Set status bar to black
+    [application setStatusBarStyle:UIStatusBarStyleBlackOpaque];
+    
     return YES;
 }
+#pragma GCC diagnostic warning "-Wall"
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {

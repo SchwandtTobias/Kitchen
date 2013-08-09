@@ -15,5 +15,6 @@
 
 - (void)setCheckBoxTo:(BOOL)check;
 
-@property (nonatomic) int rowNumber;
+@property (assign) int rowNumber;
+@property (assign) int hitOverlay;
 @end

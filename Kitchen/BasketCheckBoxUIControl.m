@@ -10,6 +10,7 @@
 
 @implementation BasketCheckBoxUIControl
 @synthesize rowNumber = _rowNumber;
+@synthesize hitOverlay = _hitOverlay;
 
 -(id)init
 {
@@ -38,6 +39,9 @@
         
         
         [self addTarget:self action:@selector(checkBoxSelect) forControlEvents:UIControlEventTouchUpInside];
+        
+        
+        _hitOverlay = 50;
     }
     return self;
 }
@@ -46,6 +50,12 @@
 {
     [self setSelected:check];
     checkBoxSelected = check;
+}
+
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    CGRect largerFrame = CGRectMake(self.frame.origin.x - _hitOverlay, self.frame.origin.y - _hitOverlay, self.frame.size.width + _hitOverlay, self.frame.size.height + _hitOverlay);
+    return (CGRectContainsPoint(largerFrame, point) == 1) ? self : nil;
 }
 
 - (void)checkBoxSelect

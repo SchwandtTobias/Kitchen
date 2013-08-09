@@ -9,12 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @interface BasketProductListViewController : UITableViewController<UITextFieldDelegate, UIAlertViewDelegate>
+{
+    NSManagedObjectContext *_managedObjectContext;
+    NSMutableArray *_productsInBasket;
+}
 
-@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (strong, nonatomic) NSMutableArray *productsInBasket;
-
-@property (strong, nonatomic) UITextField *insertTextField;
-@property (strong, nonatomic) UIBarButtonItem *editingDoneBarButton;
+@property (weak, nonatomic) IBOutlet UITextField *insertTextField;
 
 - (IBAction)actionBarButton:(id)sender;
 @end

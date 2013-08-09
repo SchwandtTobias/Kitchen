@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "BasketProduct.h"
 
-@interface BasketProductSingleViewController : UIViewController<UITextFieldDelegate, UIAlertViewDelegate>
+@interface BasketProductSingleViewController : UITableViewController<UITextFieldDelegate, UIAlertViewDelegate>
 {
     NSManagedObjectContext *_managedObjectContext;
 }
@@ -22,5 +22,4 @@
 
 
 - (IBAction)deleteProductInBasket:(id)sender;
-- (IBAction)editingDone:(id)sender;
 @end
